@@ -1,0 +1,29 @@
+{
+    "name": "jxzsxsp/php-spider",
+    "description": "PHP网络爬虫",
+    "type": "project",
+    "require": {
+        "php-http/guzzle6-adapter": "^1.1",
+        "nette/database": "^2.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.2"
+    },
+    "license": "Apache2",
+    "authors": [
+        {
+            "name": "Sean.Xiao",
+            "email": "jxzsxsp@qq.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Spider\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spider\\Tests\\": "tests/"
+        }
+    }
+}
