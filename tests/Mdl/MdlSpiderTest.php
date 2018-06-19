@@ -20,7 +20,8 @@ class MdlSpiderTest extends TestCase
 
     public function testHospital():void {
         $spider = new MdlSpider();
-        $spider->getHospital();
+        //$spider->getHospital();
+        //$spider->getDoctor();
     }
 
 }

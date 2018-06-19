@@ -18,11 +18,16 @@ class MdlSpider
 {
 
     private $db;
+    private $http;
 
     public function __construct()
     {
         if($this->db == null) {
             $this->db = new Connection("mysql:host=127.0.0.1;dbname=linme_mdl", "root", "123456");
+        }
+
+        if($this->http == null) {
+            $this->http = new Http();
         }
     }
 
@@ -32,7 +37,7 @@ class MdlSpider
         $index = 0;
         $num = 0;
         do {
-            $data = Http::getData($url.$index);
+            $data = $this->http->getData($url.$index);
             $hospitals = $data->obj->listData;
 
             foreach ($hospitals as $hospital) {
@@ -47,12 +52,27 @@ class MdlSpider
     }
 
     public function getDoctor():void {
-        $url = "http://m.mdl.com/api/doctors?pn=0";
-        $data = Http::getData($url);
-        $doctors = $data->obj->listData;
+        $url = "http://m.mdl.com/api/doctors?pn=";
 
-        foreach ($doctors as $doctor) {
-            var_dump($doctor);
-        }
+        $index = 0;
+        $num = 0;
+        do {
+            $data = $this->http->getData($url.$index);
+            $doctors = $data->obj->listData;
+
+            foreach ($doctors as $doctor) {
+                MdlDoctor::saveDoctor($this->db, $doctor);
+
+                foreach ($doctor->caseItems as $item) {
+                    MdlItem::saveItem($this->db, $item);
+                    MdlItem::saveDoctorItemCase($this->db, $doctor->doctorId, $item->itemId, $item->itemNum->caseNum);
+                }
+
+                $num++;
+            }
+
+            $index++;
+        } while($data->obj->hasNext == 1);
+
     }
 }
